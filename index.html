@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Regis Jesuit Lost & Found</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#C8102E;
+  --dark-red:#991B1B;
+  --light-red:#FFF5F5;
+  --white:#FFFFFF;
+  --off:#F8F6F2;
+  --gray:#6B7280;
+  --black:#111827;
+  --line:#E5E7EB;
+  --green:#15803D;
+  --amber:#B45309;
+  --shadow:0 10px 35px rgba(17,24,39,.08);
+  --shadow-lg:0 24px 70px rgba(17,24,39,.16);
+}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,sans-serif;color:var(--black);background:white;overflow-x:hidden}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.serif{font-family:"Times New Roman",Times,serif;font-weight:700}
+.data{font-family:monospace}
+
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:999;
+  height:72px;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2.5rem;
+}
+.logo{display:flex;align-items:center;gap:.8rem;cursor:pointer}
+.logo-badge{
+  width:42px;height:42px;border-radius:12px;background:var(--red);color:white;
+  display:grid;place-items:center;font-weight:900;letter-spacing:.04em;
+  box-shadow:0 10px 24px rgba(200,16,46,.25)
+}
+.logo-title{font-weight:900;color:var(--black);font-size:1.05rem}
+.logo-sub{font-size:.68rem;text-transform:uppercase;letter-spacing:.16em;color:var(--red);font-weight:800;margin-top:2px}
+.nav-links{display:flex;align-items:center;gap:.35rem}
+.nav-link{
+  border:0;background:transparent;color:#374151;font-weight:800;
+  padding:.55rem .85rem;border-radius:999px;font-size:.88rem
+}
+.nav-link:hover{background:var(--light-red);color:var(--red)}
+.nav-btn{
+  border:0;background:var(--red);color:white;font-weight:900;
+  padding:.62rem 1.1rem;border-radius:999px;margin-left:.4rem
+}
+.nav-btn:hover{background:var(--dark-red);transform:translateY(-1px)}
+
+.page{display:none;padding-top:72px}
+.page.active{display:block}
+
+.hero{
+  min-height:100vh;background:white;position:relative;overflow:hidden;
+  display:grid;grid-template-columns:1.05fr .95fr;gap:3rem;
+  align-items:center;padding:8rem 6% 5rem;
+}
+.hero:before{
+  content:"";position:absolute;inset:auto -15% -35% -15%;height:55%;
+  background:radial-gradient(circle,var(--light-red),transparent 65%);
+  z-index:0
+}
+.hero-main,.hero-visual{position:relative;z-index:2}
+.badge{
+  display:inline-flex;background:var(--light-red);color:var(--red);
+  padding:.55rem 1rem;border-radius:999px;font-size:.78rem;
+  font-weight:900;text-transform:uppercase;letter-spacing:.12em;margin-bottom:1.5rem
+}
+.hero h1{
+  font-family:"Times New Roman",Times,serif;font-weight:700;
+  font-size:clamp(4rem,8vw,7rem);line-height:.9;letter-spacing:-.065em;
+  color:var(--black);margin-bottom:1.25rem
+}
+.hero h1 span{color:var(--red)}
+.hero p{font-size:1.18rem;line-height:1.75;color:#4B5563;max-width:650px;margin-bottom:2rem}
+.hero-search{
+  display:flex;gap:.75rem;max-width:620px;background:white;border:1px solid var(--line);
+  padding:.55rem;border-radius:18px;box-shadow:var(--shadow);margin-bottom:1.4rem
+}
+.hero-search input{flex:1;border:0;outline:0;padding:.8rem 1rem;font-weight:700}
+.hero-search button,.btn-primary{
+  background:var(--red);color:white;border:0;border-radius:12px;
+  padding:.85rem 1.25rem;font-weight:900
+}
+.hero-search button:hover,.btn-primary:hover{background:var(--dark-red)}
+.btn-secondary{
+  background:white;color:var(--red);border:1.5px solid var(--red);
+  border-radius:12px;padding:.85rem 1.25rem;font-weight:900
+}
+.btn-secondary:hover{background:var(--light-red)}
+.actions{display:flex;gap:.8rem;flex-wrap:wrap}
+
+.hero-visual{
+  background:linear-gradient(180deg,#fff,var(--light-red));
+  border:1px solid var(--line);border-radius:34px;padding:1.4rem;
+  box-shadow:var(--shadow-lg)
+}
+.visual-top{
+  height:190px;border-radius:24px;background:
+  linear-gradient(rgba(200,16,46,.80),rgba(200,16,46,.80)),
+  url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&q=80");
+  background-size:cover;background-position:center;
+  color:white;padding:1.4rem;display:flex;flex-direction:column;justify-content:flex-end
+}
+.visual-top h3{font-family:"Times New Roman",Times,serif;font-size:2.4rem;line-height:.95}
+.visual-item{
+  margin-top:.85rem;background:white;border:1px solid var(--line);border-radius:20px;
+  padding:1rem;display:grid;grid-template-columns:48px 1fr auto;gap:.85rem;align-items:center
+}
+.visual-icon{
+  width:48px;height:48px;border-radius:14px;display:grid;place-items:center;
+  background:var(--light-red);font-size:1.5rem
+}
+.visual-item strong{display:block;color:var(--black)}
+.visual-item span{font-size:.8rem;color:var(--gray);font-weight:700}
+.pill{font-size:.7rem;font-weight:900;color:var(--red);background:var(--light-red);padding:.35rem .55rem;border-radius:999px}
+
+.section{padding:5.5rem 6%}
+.section-inner{max-width:1180px;margin:auto}
+.eyebrow{color:var(--red);font-size:.78rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase;margin-bottom:.75rem}
+.section-title{
+  font-family:"Times New Roman",Times,serif;font-size:clamp(2.7rem,5vw,4.5rem);
+  line-height:.95;letter-spacing:-.055em;margin-bottom:1rem;color:var(--black)
+}
+.section-sub{color:var(--gray);font-size:1.05rem;line-height:1.75;max-width:760px;margin-bottom:2.2rem}
+
+.stats{background:var(--off)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.stat{
+  background:white;border:1px solid var(--line);border-radius:22px;padding:2rem;
+  box-shadow:var(--shadow);text-align:center;border-top:5px solid var(--red)
+}
+.stat h3{font-family:"Times New Roman",Times,serif;font-size:3.2rem;color:var(--red);line-height:1}
+.stat p{color:var(--gray);font-weight:900;text-transform:uppercase;font-size:.78rem;margin-top:.6rem;letter-spacing:.08em}
+
+.steps,.portal-grid,.quote-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.step,.portal-card,.quote{
+  background:white;border:1px solid var(--line);border-radius:22px;padding:1.6rem;
+  box-shadow:var(--shadow);transition:.2s
+}
+.step:hover,.portal-card:hover,.quote:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg)}
+.step-num{font-family:"Times New Roman",Times,serif;font-size:2.2rem;color:var(--red);margin-bottom:.8rem}
+.step h3,.portal-card h3{color:var(--black);font-size:1.15rem;margin-bottom:.55rem}
+.step p,.portal-card p,.quote p{color:var(--gray);line-height:1.6;font-size:.92rem}
+.portal-card{text-align:left;min-height:210px}
+.portal-icon{font-size:2.8rem;margin-bottom:1rem}
+.quote-grid{grid-template-columns:repeat(3,1fr)}
+.quote strong{color:var(--red);display:block;margin-top:1rem}
+
+.featured{background:var(--red);color:white}
+.featured .section-title{color:white}
+.featured .section-sub{color:rgba(255,255,255,.75)}
+.featured .eyebrow{color:white}
+.featured-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.featured-card{
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);
+  border-radius:22px;padding:1.4rem;transition:.2s
+}
+.featured-card:hover{transform:translateY(-4px);background:rgba(255,255,255,.18)}
+.featured-card .emoji{font-size:2.5rem;margin-bottom:.8rem}
+.featured-card h3{margin-bottom:.35rem}
+.featured-card p{color:rgba(255,255,255,.75);line-height:1.5;font-size:.9rem}
+
+.internal{min-height:100vh;background:var(--off);padding:105px 6% 4rem}
+.internal-inner{max-width:1180px;margin:auto}
+.page-header{
+  background:white;border:1px solid var(--line);border-radius:28px;padding:2.2rem;
+  box-shadow:var(--shadow);margin-bottom:1.4rem;border-left:8px solid var(--red)
+}
+.page-header h1{
+  font-family:"Times New Roman",Times,serif;font-size:clamp(2.8rem,6vw,5rem);
+  letter-spacing:-.06em;line-height:.9;margin-bottom:.8rem;color:var(--black)
+}
+.page-header p{color:var(--gray);line-height:1.7;max-width:800px}
+
+.filters{
+  background:white;border:1px solid var(--line);border-radius:20px;padding:1rem;
+  box-shadow:var(--shadow);display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:.8rem;margin-bottom:1.3rem
+}
+input,select,textarea{
+  border:1.5px solid #D1D5DB;border-radius:13px;padding:.85rem .95rem;
+  outline:0;background:white;font-weight:700;color:var(--black);width:100%
+}
+textarea{min-height:120px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 4px rgba(200,16,46,.10)}
+label{display:grid;gap:.45rem;color:var(--black);font-weight:900;font-size:.88rem}
+.form-card,.panel{
+  background:white;border:1px solid var(--line);border-radius:22px;padding:1.5rem;box-shadow:var(--shadow)
+}
+.form{display:grid;gap:1rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.message{font-weight:900;color:var(--green);margin-top:.4rem}
+.message.error{color:var(--red)}
+
+.items-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.item-card{
+  background:white;border:1px solid var(--line);border-radius:22px;overflow:hidden;
+  box-shadow:var(--shadow);transition:.2s
+}
+.item-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.item-img{
+  height:170px;background:linear-gradient(135deg,var(--light-red),#fff);
+  display:grid;place-items:center;font-size:4rem;position:relative
+}
+.item-location{
+  position:absolute;top:12px;left:12px;background:white;color:var(--red);
+  padding:.35rem .6rem;border-radius:999px;font-size:.72rem;font-weight:900;
+  max-width:82%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+.item-body{padding:1rem}
+.status{
+  display:inline-flex;padding:.3rem .6rem;border-radius:999px;font-size:.72rem;
+  font-weight:900;margin-bottom:.65rem
+}
+.status.available,.status.approved,.status.ready{background:#DCFCE7;color:#166534}
+.status.review,.status.claimed{background:#FEF3C7;color:#92400E}
+.status.returned{background:#E0F2FE;color:#075985}
+.status.denied{background:#FEE2E2;color:#991B1B}
+.item-card h3{font-size:1.1rem;margin-bottom:.35rem;color:var(--black)}
+.meta{font-size:.82rem;color:var(--gray);font-weight:700;line-height:1.5}
+.meta b{color:var(--black)}
+.item-card p{font-size:.9rem;line-height:1.5;color:#374151;margin:.7rem 0}
+.card-actions{display:flex;gap:.55rem;flex-wrap:wrap;margin-top:.8rem}
+.btn-mini{
+  border:0;border-radius:10px;background:var(--red);color:white;
+  padding:.6rem .8rem;font-size:.82rem;font-weight:900
+}
+.btn-mini:hover{background:var(--dark-red)}
+.btn-mini.light{background:#F3F4F6;color:var(--black)}
+.btn-mini.white{background:white;color:var(--red);border:1px solid var(--red)}
+
+.two-col{display:grid;grid-template-columns:.85fr 1.15fr;gap:1.2rem;align-items:start}
+.panel h2{
+  font-family:"Times New Roman",Times,serif;font-size:2rem;letter-spacing:-.035em;
+  margin-bottom:.8rem;color:var(--black)
+}
+.claim-row,.staff-row{
+  border:1px solid var(--line);border-radius:16px;padding:1rem;margin-bottom:.8rem;background:white
+}
+.row-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap}
+.schedule{display:grid;grid-template-columns:100px repeat(5,1fr);gap:7px;overflow:auto}
+.day,.period,.slot{
+  min-height:44px;border-radius:12px;display:grid;place-items:center;text-align:center;
+  font-size:.74rem;font-weight:900;padding:.4rem
+}
+.day,.period{background:#F3F4F6;color:var(--black)}
+.slot{background:#F9FAFB;color:#9CA3AF}
+.slot.open{background:var(--light-red);color:var(--red);border:1px solid rgba(200,16,46,.22)}
+.slot.open:after{content:"PICKUP"}
+
+.staff-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-bottom:1rem}
+.staff-stat{
+  background:white;border:1px solid var(--line);border-radius:18px;padding:1.1rem;box-shadow:var(--shadow)
+}
+.staff-stat h3{font-family:"Times New Roman",Times,serif;font-size:2.4rem;color:var(--red);line-height:1}
+.staff-stat p{font-size:.78rem;color:var(--gray);font-weight:900;text-transform:uppercase;letter-spacing:.08em;margin-top:.35rem}
+.tabs{display:flex;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap}
+.tab{
+  background:white;border:1.5px solid #D1D5DB;border-radius:999px;
+  padding:.65rem 1rem;font-weight:900;color:var(--black)
+}
+.tab.active{background:var(--red);color:white;border-color:var(--red)}
+
+footer{background:var(--black);color:rgba(255,255,255,.75);padding:2rem 6%}
+.footer-inner{max-width:1180px;margin:auto;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-weight:700}
+
+@media(max-width:980px){
+  .hero{grid-template-columns:1fr;padding-top:7rem}
+  .stats-grid,.steps,.portal-grid,.staff-stats{grid-template-columns:repeat(2,1fr)}
+  .featured-grid,.items-grid,.quote-grid{grid-template-columns:repeat(2,1fr)}
+  .filters{grid-template-columns:1fr}
+  .two-col{grid-template-columns:1fr}
+  .nav-link{display:none}
+}
+@media(max-width:640px){
+  nav{padding:0 1rem}
+  .logo-sub{display:none}
+  .hero-search,.actions{flex-direction:column}
+  .stats-grid,.steps,.portal-grid,.featured-grid,.items-grid,.quote-grid,.form-row,.staff-stats{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+<nav>
+  <div class="logo" onclick="showPage('home')">
+    <div class="logo-badge">RJ</div>
+    <div>
+      <div class="logo-title">Regis Jesuit Lost & Found</div>
+      <div class="logo-sub">Report • Verify • Recover</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <button class="nav-link" onclick="scrollHome('how')">How it Works</button>
+    <button class="nav-link" onclick="scrollHome('featured')">Recent Items</button>
+    <button class="nav-link" onclick="showPage('browse')">Browse</button>
+    <button class="nav-link" onclick="showPage('profile')">My Profile</button>
+    <button class="nav-btn" onclick="showPage('staff')">Staff</button>
+  </div>
+</nav>
+
+<main>
+<section id="home" class="page active">
+  <div class="hero">
+    <div class="hero-main">
+      <div class="badge">Built for Regis Jesuit</div>
+      <h1>LOST AT RJ<br>DOESN'T HAVE TO<br><span>MEAN GONE.</span></h1>
+      <p>A campus-wide recovery platform built specifically for the Regis Jesuit community. Report, search, verify, and recover lost items across the Boys Division, Girls Division, Chapel, Library, Gym, Quad, and athletic areas.</p>
+      <div class="hero-search">
+        <input id="heroSearch" placeholder="Search AirPods, hoodie, Hydro Flask..." onkeydown="heroSearchKey(event)">
+        <button onclick="heroSearch()">Search</button>
+      </div>
+      <div class="actions">
+        <button class="btn-primary" onclick="showPage('browse')">Browse Found Items</button>
+        <button class="btn-secondary" onclick="showPage('report')">Report Item</button>
+        <button class="btn-secondary" onclick="showPage('staff')">Staff Demo</button>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="visual-top">
+        <h3 class="serif">Regis Jesuit<br>Recovery System</h3>
+      </div>
+      <div id="heroPreviewItems"></div>
+    </div>
+  </div>
+
+  <section class="stats">
+    <div class="stats-grid">
+      <div class="stat"><h3 id="homeItems">100</h3><p>Reported Items</p></div>
+      <div class="stat"><h3>89%</h3><p>Recovery Rate</p></div>
+      <div class="stat"><h3>10</h3><p>Campus Locations</p></div>
+      <div class="stat"><h3 id="homeClaims">0</h3><p>Claims Tracked</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="how">
+    <div class="section-inner">
+      <div class="eyebrow">How It Works</div>
+      <h2 class="section-title">A better system than checking the office again and again.</h2>
+      <p class="section-sub">RJ Lost & Found turns a messy school problem into a clear workflow for students and staff.</p>
+      <div class="steps">
+        <div class="step"><div class="step-num">01</div><h3>Report</h3><p>Staff or students submit found items with details, location, date, and reporter name.</p></div>
+        <div class="step"><div class="step-num">02</div><h3>Search</h3><p>Students search by item, category, location, reporter, or item ID.</p></div>
+        <div class="step"><div class="step-num">03</div><h3>Verify</h3><p>Claimants submit evidence like initials, stickers, scratches, contents, or lock screen details.</p></div>
+        <div class="step"><div class="step-num">04</div><h3>Recover</h3><p>Staff approve claims, mark items ready, and track returned items.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section featured" id="featured">
+    <div class="section-inner">
+      <div class="eyebrow">Recently Reported</div>
+      <h2 class="section-title">Live inventory preview.</h2>
+      <p class="section-sub">Realistic demo items make the system feel active the second judges open it.</p>
+      <div class="featured-grid" id="featuredItems"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="eyebrow">Student Portal</div>
+      <h2 class="section-title">The dashboard comes after the website story.</h2>
+      <p class="section-sub">The platform feels like a real website first, then a useful student tool.</p>
+      <div class="portal-grid">
+        <button class="portal-card" onclick="showPage('report')"><div class="portal-icon">🧥</div><h3>Report Item</h3><p>Add a found item with location, reporter, description, and category.</p></button>
+        <button class="portal-card" onclick="showPage('browse')"><div class="portal-icon">🔍</div><h3>Browse Items</h3><p>Search 100 demo items across Regis Jesuit campus locations.</p></button>
+        <button class="portal-card" onclick="showPage('claim')"><div class="portal-icon">📩</div><h3>Claim Item</h3><p>Submit proof so staff can verify ownership.</p></button>
+        <button class="portal-card" onclick="showPage('profile')"><div class="portal-icon">👤</div><h3>My Profile</h3><p>Login as James Christin with student ID 200126100.</p></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--off)">
+    <div class="section-inner">
+      <div class="eyebrow">Campus Impact</div>
+      <h2 class="section-title">Built around actual student frustration.</h2>
+      <div class="quote-grid">
+        <div class="quote"><p>“Instead of checking the office every day, I could immediately see my calculator had been turned in.”</p><strong>— Student demo quote</strong></div>
+        <div class="quote"><p>“The verification process makes it much easier to confirm ownership before returning items.”</p><strong>— Staff demo quote</strong></div>
+        <div class="quote"><p>“This feels much more organized than a traditional lost-and-found box.”</p><strong>— Judge-facing demo quote</strong></div>
+      </div>
+    </div>
+  </section>
+</section>
+
+<section id="browse" class="page internal">
+  <div class="internal-inner">
+    <div class="page-header">
+      <h1>Browse Found Items</h1>
+      <p>Search through 100 realistic demo items reported across Regis Jesuit locations.</p>
+    </div>
+    <div class="filters">
+      <input id="searchInput" placeholder="Search item, ID, location, reporter..." oninput="renderItems()">
+      <select id="categoryFilter" onchange="renderItems()"><option value="">All categories</option></select>
+      <select id="locationFilter" onchange="renderItems()"><option value="">All locations</option></select>
+      <button class="btn-mini" onclick="showPage('report')">Report Item</button>
+    </div>
+    <div class="items-grid" id="itemsList"></div>
+  </div>
+</section>
+
+<section id="report" class="page internal">
+  <div class="internal-inner">
+    <div class="page-header">
+      <h1>Report a Found Item</h1>
+      <p>New reports immediately appear in Browse Items and the Staff Dashboard.</p>
+    </div>
+    <div class="form-card">
+      <form class="form" id="reportForm">
+        <div class="form-row">
+          <label>Item Name*<input id="itemName" required placeholder="Blue Hydro Flask"></label>
+          <label>Category*<select id="itemCategory" required></select></label>
+        </div>
+        <label>Description*<textarea id="itemDescription" required placeholder="Color, brand, stickers, initials, scratches, contents..."></textarea></label>
+        <div class="form-row">
+          <label>Date Found*<input type="date" id="dateFound" required></label>
+          <label>Location Found*<input id="locationFound" required placeholder="Library, Chapel, Boys Division Cafeteria..."></label>
+        </div>
+        <div class="form-row">
+          <label>Reported By*<input id="finderName" required placeholder="Front Desk"></label>
+          <label>Reporter Email<input type="email" id="finderEmail" placeholder="optional"></label>
+        </div>
+        <button class="btn-primary" type="submit">Submit Found Item</button>
+        <p id="reportMessage" class="message"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section id="claim" class="page internal">
+  <div class="internal-inner">
+    <div class="page-header">
+      <h1>Claim an Item</h1>
+      <p>Submit evidence so staff can verify that the item is yours.</p>
+    </div>
+    <div class="form-card">
+      <form class="form" id="claimForm">
+        <label>Item ID or Item Name*<input id="claimItemRef" required placeholder="RJ-2500"></label>
+        <div class="form-row">
+          <label>Student ID*<input id="studentId" required placeholder="200126100"></label>
+          <label>Student Name*<input id="studentName" required placeholder="James Christin"></label>
+        </div>
+        <div class="form-row">
+          <label>Email*<input type="email" id="claimerEmail" required placeholder="student@regisjesuit.example"></label>
+          <label>Where did you lose it?*<input id="claimLocationGuess" required placeholder="Library, gym, cafeteria..."></label>
+        </div>
+        <label>Evidence it is yours*<textarea id="claimEvidence" required placeholder="The lock screen photo is my dog. There is a blue sticker on the back. My initials are written inside."></textarea></label>
+        <button class="btn-primary" type="submit">Submit Claim</button>
+        <p id="claimMessage" class="message"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section id="profile" class="page internal">
+  <div class="internal-inner">
+    <div class="page-header">
+      <h1>My Profile</h1>
+      <p>Demo login: James Christin and 200126100. Capitalization does not matter.</p>
+    </div>
+    <div class="two-col">
+      <div class="panel" id="profileLoginPanel">
+        <h2>Student Login</h2>
+        <form class="form" id="profileForm">
+          <label>Student ID<input id="profileStudentId" required placeholder="200126100"></label>
+          <label>First and Last Name<input id="profileStudentName" required placeholder="James Christin"></label>
+          <button class="btn-primary" type="submit">Log In</button>
+          <p id="profileMessage" class="message error"></p>
+        </form>
+      </div>
+      <div class="panel hidden" id="profilePanel">
+        <h2 id="profileWelcome">Welcome</h2>
+        <p class="meta" style="margin-bottom:1rem">Your submitted claims and statuses appear here.</p>
+        <div id="profileClaims"></div>
+        <button class="btn-mini light" onclick="profileLogout()">Log Out</button>
+      </div>
+      <div class="panel">
+        <h2>Pickup Schedule</h2>
+        <p class="meta" style="margin-bottom:1rem">Highlighted blocks show pickup times.</p>
+        <div class="schedule" id="pickupSchedule"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="staff" class="page internal">
+  <div class="internal-inner">
+    <div class="page-header">
+      <h1>Staff Dashboard</h1>
+      <p>Judge demo password: <b>GoRaiders</b>. Staff can view reported items, claim evidence, and update statuses.</p>
+    </div>
+    <div class="panel" id="staffLoginPanel" style="max-width:460px">
+      <h2>Staff Login</h2>
+      <p class="meta" style="margin-bottom:1rem">Password: <b>GoRaiders</b></p>
+      <label>Password<input type="password" id="staffPassword" placeholder="GoRaiders"></label>
+      <button class="btn-primary" style="margin-top:1rem" onclick="staffLogin()">Enter Dashboard</button>
+      <p id="staffLoginMessage" class="message error"></p>
+    </div>
+
+    <div id="staffPanel" class="hidden">
+      <div class="staff-stats">
+        <div class="staff-stat"><h3 id="staffItemCount">0</h3><p>Reported Items</p></div>
+        <div class="staff-stat"><h3 id="staffClaimCount">0</h3><p>Total Claims</p></div>
+        <div class="staff-stat"><h3 id="staffOpenClaims">0</h3><p>Open Claims</p></div>
+        <div class="staff-stat"><h3 id="staffReturned">0</h3><p>Returned</p></div>
+      </div>
+      <div class="tabs">
+        <button class="tab active" id="tabItems" onclick="setStaffTab('items')">Reported Items</button>
+        <button class="tab" id="tabClaims" onclick="setStaffTab('claims')">Claims & Evidence</button>
+      </div>
+      <div id="staffItems"></div>
+      <div id="staffClaims" class="hidden"></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <strong>Regis Jesuit Lost & Found</strong>
+    <span>Report • Search • Verify • Recover</span>
+  </div>
+</footer>
+
+<script>
+const STAFF_PASSWORD="GoRaiders";
+const DEMO_STUDENT_ID="200126100";
+const DEMO_STUDENT_NAME="James Christin";
+
+const LOCATIONS=["Boys Division Cafeteria","Girls Division Cafeteria","Library","Chapel","Gym","Quad","Classrooms","Tennis Courts","Athletic Fields","Parking Lot"];
+const CATEGORIES=["Clothing","Electronics","Water Bottles","School Supplies","Sports Equipment","Books","Keys","Other"];
+const REPORTERS=["Coach Martinez","Mrs. O'Brien","Mr. Flanagan","Front Desk","Security Office","Ms. Hernandez","Coach Williams","Mr. Kavanagh","Library Staff","Cafeteria Staff"];
+const ITEM_NAMES=[
+"Blue Hydro Flask","AirPods Case","TI-84 Calculator","RJ Quarter Zip","Black Nike Hoodie","Water Bottle","Apple AirPods","Graphing Calculator","Green Backpack","Volleyball","Soccer Cleats","Baseball Cap","Gray Sweatshirt","iPhone Charger","MacBook Charger","USB-C Cable","Spanish Textbook","AP Chemistry Notebook","Biology Lab Manual","English Novel","Silver Key Ring","House Keys","Car Keys","Lanyard with Keys","Red Lunch Box","Glasses Case","Sunglasses","Retainer Case","Football Gloves","Lacrosse Stick","Tennis Racket","Golf Club","Blue Nalgene","Stanley Cup","Black Hydro Flask","Purple Water Bottle","Chromebook","iPad Case","Wireless Earbuds","Laptop Sleeve","Planner Notebook","Pencil Case","Ruler Set","Colored Pencils","RJ Sweatpants","Athletic Shorts","Track Jacket","Soccer Jersey","Rosary Beads","Prayer Book","Saint Joseph Missal","Bible","Brown Wallet","Black Wallet","Card Holder","AirTag Keychain","PE Uniform Top","PE Uniform Shorts","Wrestling Singlet","Swim Goggles","Red Folder","Binder","Spiral Notebook","Composition Book","Protein Shaker","Lunch Bag","Tupperware Set","Thermos","Umbrella","Rain Jacket","Winter Gloves","Beanie Hat","Guitar Pick","Music Folder","Band Sheet Music","Instrument Strap","Photo ID Card","Library Book","Hall Pass","Permission Slip","Knee Brace","Athletic Tape","Ice Pack","First Aid Kit","Chemistry Safety Goggles","Science Ruler","Protractor Set","Compass","Debate Notes","History Flashcards","Math Formula Sheet","ACT Prep Book","Volleyball Knee Pads","Basketball","Lacrosse Helmet","Football","Black Fleece Jacket","Zip-Up Hoodie","Long Sleeve Shirt","Polo Shirt","Graphing Notebook","Art Sketchbook","Design Portfolio","Drawing Kit"
+];
+
+let items=[];
+let claims=[];
+let staffAuthed=false;
+let staffTab="items";
+const ITEM_KEY="rj_red_white_items_v1";
+const CLAIM_KEY="rj_red_white_claims_v1";
+
+document.addEventListener("DOMContentLoaded",()=>{
+  loadData();
+  if(items.length<100){items=makeItems();saveData();}
+  if(claims.length===0){claims=makeClaims();saveData();}
+  populateControls();
+  setupForms();
+  renderAll();
+  const df=document.getElementById("dateFound");
+  if(df)df.valueAsDate=new Date();
+});
+
+function loadData(){
+  try{items=JSON.parse(localStorage.getItem(ITEM_KEY)||"[]")}catch{items=[]}
+  try{claims=JSON.parse(localStorage.getItem(CLAIM_KEY)||"[]")}catch{claims=[]}
+}
+function saveData(){
+  localStorage.setItem(ITEM_KEY,JSON.stringify(items));
+  localStorage.setItem(CLAIM_KEY,JSON.stringify(claims));
+}
+function rng(seed){let x=seed;return()=>{x=(x*1664525+1013904223)&0xffffffff;return(x>>>0)/0xffffffff}}
+const rand=rng(42);
+
+function makeItems(){
+  const arr=[];
+  for(let i=0;i<100;i++){
+    const name=ITEM_NAMES[i%ITEM_NAMES.length];
+    const category=categoryFor(name,i);
+    const location=LOCATIONS[Math.floor(rand()*LOCATIONS.length)];
+    const reporter=REPORTERS[Math.floor(rand()*REPORTERS.length)];
+    const d=new Date();d.setDate(d.getDate()-(i%30));
+    let status="Available";const roll=rand();if(roll>.78&&roll<=.92)status="Claimed";if(roll>.92)status="Returned";
+    arr.push({
+      id:`RJ-${2500+i}`,
+      name,category,location,reporter,status,
+      dateFound:d.toISOString().split("T")[0],
+      description:`${name} found in good condition at ${location}. Staff should verify unique details before returning it.`,
+      emoji:emojiFor(name,category,i),
+      createdAt:Date.now()-i*700000
+    });
+  }
+  return arr;
+}
+function makeClaims(){
+  return[
+    {id:"CLAIM-7401",itemRef:"RJ-2500",studentId:DEMO_STUDENT_ID,studentName:"James Christin",email:"james.christin@regisjesuit.example",locationGuess:"Boys Division Cafeteria",evidence:"It has a dent by the lid and an RJ tennis sticker on the side.",status:"Approved",createdAt:Date.now()-4600000},
+    {id:"CLAIM-7402",itemRef:"RJ-2530",studentId:DEMO_STUDENT_ID,studentName:"James Christin",email:"james.christin@regisjesuit.example",locationGuess:"Tennis Courts",evidence:"The grip is black and there is overgrip in the side pocket.",status:"Under Review",createdAt:Date.now()-3100000},
+    {id:"CLAIM-7403",itemRef:"RJ-2502",studentId:"200111222",studentName:"Emma Walsh",email:"emma.walsh@regisjesuit.example",locationGuess:"Science hallway",evidence:"My calculator has a tiny silver star sticker near the screen.",status:"Under Review",createdAt:Date.now()-2200000},
+    {id:"CLAIM-7404",itemRef:"RJ-2524",studentId:"200333444",studentName:"Noah Garcia",email:"noah.garcia@regisjesuit.example",locationGuess:"Gym",evidence:"There is a small tear on the inside pocket and a lunch card inside.",status:"Ready for Pickup",createdAt:Date.now()-1250000}
+  ];
+}
+function categoryFor(name,i){
+  const s=name.toLowerCase();
+  if(s.includes("hoodie")||s.includes("quarter")||s.includes("sweat")||s.includes("jacket")||s.includes("shirt")||s.includes("shorts")||s.includes("uniform"))return"Clothing";
+  if(s.includes("airpod")||s.includes("charger")||s.includes("ipad")||s.includes("chromebook")||s.includes("earbud")||s.includes("laptop"))return"Electronics";
+  if(s.includes("hydro")||s.includes("bottle")||s.includes("stanley")||s.includes("nalgene"))return"Water Bottles";
+  if(s.includes("calculator")||s.includes("notebook")||s.includes("binder")||s.includes("folder")||s.includes("pencil")||s.includes("ruler")||s.includes("portfolio"))return"School Supplies";
+  if(s.includes("volleyball")||s.includes("soccer")||s.includes("cleats")||s.includes("tennis")||s.includes("golf")||s.includes("lacrosse")||s.includes("football")||s.includes("swim"))return"Sports Equipment";
+  if(s.includes("book")||s.includes("textbook")||s.includes("manual")||s.includes("novel")||s.includes("bible")||s.includes("missal"))return"Books";
+  if(s.includes("key")||s.includes("lanyard"))return"Keys";
+  return CATEGORIES[i%CATEGORIES.length];
+}
+function emojiFor(name,category,i){
+  const s=name.toLowerCase();
+  if(s.includes("hydro")||s.includes("bottle")||s.includes("stanley")||s.includes("nalgene"))return"💧";
+  if(s.includes("airpod")||s.includes("earbud"))return"🎧";
+  if(s.includes("calculator"))return"🧮";
+  if(s.includes("hoodie")||s.includes("jacket")||s.includes("sweat"))return"🧥";
+  if(s.includes("key"))return"🔑";
+  if(s.includes("book")||s.includes("text"))return"📚";
+  if(s.includes("tennis"))return"🎾";
+  if(s.includes("soccer"))return"⚽";
+  if(s.includes("lunch"))return"🥪";
+  if(s.includes("rosary")||s.includes("bible")||s.includes("prayer"))return"✝️";
+  return["📱","👜","🎒","📚","🔑","💧","👟","🧢","📓","🎧","🔋","📐"][i%12];
+}
+
+function populateControls(){
+  const cf=document.getElementById("categoryFilter");
+  const lf=document.getElementById("locationFilter");
+  const ic=document.getElementById("itemCategory");
+  CATEGORIES.forEach(c=>{cf.innerHTML+=`<option>${c}</option>`;ic.innerHTML+=`<option>${c}</option>`});
+  LOCATIONS.forEach(l=>lf.innerHTML+=`<option>${l}</option>`);
+}
+function setupForms(){
+  reportForm.addEventListener("submit",e=>{e.preventDefault();addItem()});
+  claimForm.addEventListener("submit",e=>{e.preventDefault();submitClaim()});
+  profileForm.addEventListener("submit",e=>{e.preventDefault();profileLogin()});
+}
+function showPage(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+  if(id==="browse")renderItems();
+  if(id==="staff"&&staffAuthed)renderStaff();
+}
+function scrollHome(target){
+  showPage("home");
+  setTimeout(()=>document.getElementById(target)?.scrollIntoView({behavior:"smooth"}),50);
+}
+function heroSearchKey(e){if(e.key==="Enter")heroSearch()}
+function heroSearch(){
+  document.getElementById("searchInput").value=document.getElementById("heroSearch").value;
+  showPage("browse");renderItems();
+}
+function renderAll(){
+  renderStats();renderHeroPreview();renderFeatured();renderItems();renderSchedule();renderProfileClaims();
+  if(staffAuthed)renderStaff();
+}
+function renderStats(){
+  homeItems.textContent=items.length;
+  homeClaims.textContent=claims.length;
+}
+function renderHeroPreview(){
+  heroPreviewItems.innerHTML="";
+  items.slice(0,3).forEach(item=>{
+    heroPreviewItems.innerHTML+=`
+    <div class="visual-item">
+      <div class="visual-icon">${item.emoji}</div>
+      <div><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(item.location)} • <span class="data">${escapeHtml(item.id)}</span></span></div>
+      <div class="pill">${escapeHtml(item.category)}</div>
+    </div>`;
+  });
+}
+function renderFeatured(){
+  featuredItems.innerHTML="";
+  items.slice(0,6).forEach(item=>{
+    featuredItems.innerHTML+=`
+    <div class="featured-card">
+      <div class="emoji">${item.emoji}</div>
+      <h3>${escapeHtml(item.name)}</h3>
+      <p><span class="data">${escapeHtml(item.id)}</span> • ${escapeHtml(item.location)} • Reported by ${escapeHtml(item.reporter)}</p>
+    </div>`;
+  });
+}
+function renderItems(){
+  const q=(searchInput?.value||"").toLowerCase();
+  const cat=categoryFilter?.value||"";
+  const loc=locationFilter?.value||"";
+  const filtered=items.filter(item=>{
+    const text=`${item.id} ${item.name} ${item.category} ${item.location} ${item.reporter} ${item.description} ${item.status}`.toLowerCase();
+    return(!q||text.includes(q))&&(!cat||item.category===cat)&&(!loc||item.location===loc);
+  });
+  itemsList.innerHTML="";
+  filtered.forEach(item=>{
+    itemsList.innerHTML+=`
+    <article class="item-card">
+      <div class="item-img"><div class="item-location">${escapeHtml(item.location)}</div>${item.emoji}</div>
+      <div class="item-body">
+        <span class="status ${statusClass(item.status)}">${escapeHtml(item.status)}</span>
+        <h3>${escapeHtml(item.name)}</h3>
+        <div class="meta"><b>ID:</b> <span class="data">${escapeHtml(item.id)}</span> • <b>${escapeHtml(item.category)}</b><br>
+        <b>Reported by:</b> ${escapeHtml(item.reporter)} • ${escapeHtml(item.dateFound)}</div>
+        <p>${escapeHtml(item.description)}</p>
+        <div class="card-actions">
+          <button class="btn-mini" onclick="startClaim('${item.id}')">Claim this</button>
+          <button class="btn-mini light" onclick="copyId('${item.id}')">Copy ID</button>
+        </div>
+      </div>
+    </article>`;
+  });
+  if(filtered.length===0)itemsList.innerHTML=`<p class="message error">No items match your search.</p>`;
+}
+function addItem(){
+  const newItem={
+    id:"RJ-"+Math.floor(9000+Math.random()*90000),
+    name:itemName.value.trim(),
+    category:itemCategory.value,
+    description:itemDescription.value.trim(),
+    dateFound:dateFound.value,
+    location:locationFound.value.trim(),
+    reporter:finderName.value.trim(),
+    reporterEmail:finderEmail.value.trim(),
+    emoji:emojiFor(itemName.value,itemCategory.value,0),
+    status:"Available",
+    createdAt:Date.now()
+  };
+  items.unshift(newItem);saveData();
+  reportMessage.textContent="Item reported. It now appears in Browse Items and the Staff Dashboard.";
+  reportForm.reset();dateFound.valueAsDate=new Date();renderAll();
+}
+function startClaim(id){
+  showPage("claim");
+  claimItemRef.value=id;
+  studentId.value=DEMO_STUDENT_ID;
+  studentName.value=DEMO_STUDENT_NAME;
+  claimerEmail.value="james.christin@regisjesuit.example";
+  claimEvidence.focus();
+}
+function submitClaim(){
+  const claim={
+    id:"CLAIM-"+Math.floor(1000+Math.random()*9000),
+    itemRef:claimItemRef.value.trim(),
+    studentId:studentId.value.trim(),
+    studentName:studentName.value.trim(),
+    email:claimerEmail.value.trim(),
+    locationGuess:claimLocationGuess.value.trim(),
+    evidence:claimEvidence.value.trim(),
+    status:"Under Review",
+    createdAt:Date.now()
+  };
+  claims.unshift(claim);saveData();
+  claimMessage.textContent="Claim submitted. It now appears in My Profile and Staff Dashboard.";
+  claimForm.reset();renderAll();
+}
+function copyId(id){navigator.clipboard?.writeText(id);alert("Copied item ID: "+id)}
+function normalizeName(n){return String(n||"").trim().replace(/\s+/g," ").toLowerCase()}
+function profileLogin(){
+  const ok=profileStudentId.value.trim()===DEMO_STUDENT_ID&&normalizeName(profileStudentName.value)===normalizeName(DEMO_STUDENT_NAME);
+  if(!ok){profileMessage.textContent="Try James Christin and 200126100.";return}
+  profileLoginPanel.classList.add("hidden");
+  profilePanel.classList.remove("hidden");
+  profileWelcome.textContent="Welcome, James Christin";
+  renderProfileClaims();
+}
+function profileLogout(){
+  profileLoginPanel.classList.remove("hidden");
+  profilePanel.classList.add("hidden");
+  profileMessage.textContent="";
+}
+function renderProfileClaims(){
+  if(!document.getElementById("profileClaims"))return;
+  const mine=claims.filter(c=>String(c.studentId)===DEMO_STUDENT_ID);
+  profileClaims.innerHTML="";
+  if(mine.length===0){profileClaims.innerHTML=`<p class="message">No claims yet.</p>`;return}
+  mine.forEach(c=>{
+    const item=items.find(i=>i.id===c.itemRef);
+    profileClaims.innerHTML+=`
+    <div class="claim-row">
+      <div class="row-top">
+        <div>
+          <span class="status ${statusClass(c.status)}">${escapeHtml(c.status)}</span>
+          <h3>${escapeHtml(item?item.name:c.itemRef)}</h3>
+          <p class="meta"><b>Claim:</b> <span class="data">${escapeHtml(c.id)}</span><br>
+          <b>Item:</b> <span class="data">${escapeHtml(c.itemRef)}</span><br>
+          <b>Evidence:</b> ${escapeHtml(c.evidence)}</p>
+        </div>
+      </div>
+    </div>`;
+  });
+}
+function renderSchedule(){
+  const days=["Mon","Tue","Wed","Thu","Fri"];
+  const periods=["1st","Support","2nd","3rd","Lunch","4th","5th","6th"];
+  const open={Mon:["Support","Lunch","5th"],Tue:["2nd","Lunch"],Wed:["1st","4th"],Thu:["3rd","Lunch","6th"],Fri:["Support","2nd"]};
+  pickupSchedule.innerHTML="<div></div>";
+  days.forEach(d=>pickupSchedule.innerHTML+=`<div class="day">${d}</div>`);
+  periods.forEach(p=>{
+    pickupSchedule.innerHTML+=`<div class="period">${p}</div>`;
+    days.forEach(d=>pickupSchedule.innerHTML+=`<div class="slot ${open[d].includes(p)?"open":""}"></div>`);
+  });
+}
+function staffLogin(){
+  if(staffPassword.value.trim()!==STAFF_PASSWORD){staffLoginMessage.textContent="Incorrect password. Hint: GoRaiders";return}
+  staffAuthed=true;
+  staffLoginPanel.classList.add("hidden");
+  staffPanel.classList.remove("hidden");
+  renderStaff();
+}
+function setStaffTab(tab){
+  staffTab=tab;
+  tabItems.classList.toggle("active",tab==="items");
+  tabClaims.classList.toggle("active",tab==="claims");
+  staffItems.classList.toggle("hidden",tab!=="items");
+  staffClaims.classList.toggle("hidden",tab!=="claims");
+}
+function renderStaff(){
+  staffItemCount.textContent=items.length;
+  staffClaimCount.textContent=claims.length;
+  staffOpenClaims.textContent=claims.filter(c=>c.status==="Under Review").length;
+  staffReturned.textContent=items.filter(i=>i.status==="Returned").length;
+  renderStaffItems();renderStaffClaims();setStaffTab(staffTab);
+}
+function renderStaffItems(){
+  staffItems.innerHTML="";
+  items.forEach(item=>{
+    staffItems.innerHTML+=`
+    <div class="staff-row">
+      <div class="row-top">
+        <div>
+          <span class="status ${statusClass(item.status)}">${escapeHtml(item.status)}</span>
+          <h3>${item.emoji} ${escapeHtml(item.name)} <span class="data">(${escapeHtml(item.id)})</span></h3>
+          <p class="meta"><b>Location:</b> ${escapeHtml(item.location)} • <b>Reported by:</b> ${escapeHtml(item.reporter)} • <b>Date:</b> ${escapeHtml(item.dateFound)}</p>
+          <p class="meta"><b>Description:</b> ${escapeHtml(item.description)}</p>
+        </div>
+        <div class="card-actions">
+          <button class="btn-mini light" onclick="updateItem('${item.id}','Available')">Available</button>
+          <button class="btn-mini light" onclick="updateItem('${item.id}','Claimed')">Claimed</button>
+          <button class="btn-mini" onclick="updateItem('${item.id}','Returned')">Returned</button>
+        </div>
+      </div>
+    </div>`;
+  });
+}
+function renderStaffClaims(){
+  staffClaims.innerHTML="";
+  claims.forEach(c=>{
+    const item=items.find(i=>i.id===c.itemRef);
+    staffClaims.innerHTML+=`
+    <div class="staff-row">
+      <div class="row-top">
+        <div>
+          <span class="status ${statusClass(c.status)}">${escapeHtml(c.status)}</span>
+          <h3>${escapeHtml(c.studentName)} is claiming ${escapeHtml(item?item.name:c.itemRef)}</h3>
+          <p class="meta"><b>Student ID:</b> <span class="data">${escapeHtml(c.studentId)}</span> • <b>Email:</b> ${escapeHtml(c.email)}</p>
+          <p class="meta"><b>Item Ref:</b> <span class="data">${escapeHtml(c.itemRef)}</span> • <b>Lost near:</b> ${escapeHtml(c.locationGuess)}</p>
+          <p class="meta"><b>Evidence:</b> ${escapeHtml(c.evidence)}</p>
+        </div>
+        <div class="card-actions">
+          <button class="btn-mini light" onclick="updateClaim('${c.id}','Approved')">Approve</button>
+          <button class="btn-mini light" onclick="updateClaim('${c.id}','Ready for Pickup')">Ready</button>
+          <button class="btn-mini" onclick="updateClaim('${c.id}','Denied')">Deny</button>
+        </div>
+      </div>
+    </div>`;
+  });
+}
+function updateClaim(id,status){const c=claims.find(x=>x.id===id);if(c){c.status=status;saveData();renderAll()}}
+function updateItem(id,status){const i=items.find(x=>x.id===id);if(i){i.status=status;saveData();renderAll()}}
+function statusClass(s){
+  s=String(s||"").toLowerCase();
+  if(s.includes("available"))return"available";
+  if(s.includes("approved"))return"approved";
+  if(s.includes("ready"))return"ready";
+  if(s.includes("review")||s.includes("claimed"))return"review";
+  if(s.includes("returned"))return"returned";
+  if(s.includes("denied"))return"denied";
+  return"available";
+}
+function escapeHtml(str){
+  return String(str??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+}
+</script>
+</body>
+</html>
